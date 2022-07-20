@@ -79,12 +79,6 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-footer
-      :absolute="!fixed"
-      app
-    >
-      <span>&copy; {{ new Date().getFullYear() }}</span>
-    </v-footer>
   </v-app>
 </template>
 
@@ -98,14 +92,29 @@ export default {
       fixed: false,
       items: [
         {
-          icon: 'mdi-apps',
+          icon: 'mdi-arch',
           title: 'Welcome',
           to: '/'
         },
         {
-          icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire'
+          icon: 'mdi-book-open-variant',
+          title: 'Livros',
+          to: '/livros'
+        },
+        {
+          icon: 'mdi-folder',
+          title: 'Categorias',
+          to: '/categorias'
+        },
+        {
+          icon: 'mdi-draw-pen',
+          title: 'Autores',
+          to: '/autores'
+        },
+        {
+          icon: 'mdi-account-box',
+          title: 'Usuários',
+          to: '/usuarios'
         }
       ],
       miniVariant: false,
