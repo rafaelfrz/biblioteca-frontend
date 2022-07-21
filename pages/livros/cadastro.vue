@@ -61,7 +61,7 @@
     </v-btn>
     <v-btn
       solo
-      @click="cadastrar"
+      @click="cadastrar"¨
     >
       Cadastrar
     </v-btn>

@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <h1>Consulta de Livros</h1>
+    <h1>Consulta de categorias</h1>
     <hr>
     <v-container>
       <v-row>
@@ -21,7 +21,7 @@
           solo
           to="/categorias/cadastro"
         >
-          Cadastro
+          Cadastrar
           </v-btn>
         </v-col>
       </v-row>
@@ -31,7 +31,23 @@
         :headers="headers"
         :items="categorias"
         :items-per-page="10"
-        class="elevation-1">
+        class="elevation-1"
+        >
+        <template v-slot:item.actions="{ item }">
+          <v-icon
+            small
+            class="mr-2"
+            @click="editItem(item)"
+          >
+            mdi-pencil
+          </v-icon>
+          <v-icon
+            small
+            @click="deletar(item)"
+          >
+            mdi-delete
+          </v-icon>
+        </template>
       </v-data-table>
     </v-container>
   </v-container>
@@ -55,7 +71,8 @@ export default {
           align: 'center',
           sortable: false,
           value: 'nome',
-        }
+        },
+        { text: "", value: "actions" }
       ],
       categorias: []
     }
@@ -68,6 +85,20 @@ export default {
   methods: {
     async getCategorias () {
       this.categorias = await this.$axios.$get('http://localhost:3333/categorias');
+      this.$toast('Categorias retornados com sucesso!');
+    },
+
+    async deletar(categoria) {
+      try {
+        if(confirm(`Deseja deletar a categoria id ${categoria.id} - ${categoria.nome}?`)) {
+          let response = await this.$axios.$post('http://localhost:3333/categorias/deletar', { id: categoria.id });
+          this.$toast.success(response.message);
+          this.getCategorias();
+        } 
+      } catch(error) {
+        console.log(error.message);
+        this.$toast.error('Ocorreu um erro ao atender a requisição. Contate o administrador/suporte');
+      }
     }
   }
 }

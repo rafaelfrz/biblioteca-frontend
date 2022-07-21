@@ -2,7 +2,7 @@
   <v-container>
     <h1>Cadastro de Autores</h1>
     <hr>
-    <v-form>
+    <v-form v-model="valid">
       <v-container>
         <v-row>
           <v-col>
@@ -19,6 +19,8 @@
             <v-text-field
             v-model="autor.nome"
             placeholder="Nome"
+            :rules="nomeRules"
+            required
             solo
             />
           </v-col>
@@ -55,22 +57,35 @@ export default {
 
   data () {
     return {
+      valid: false,
       autor: {
         id: null,
         nome: null,
         email: null,
-      } 
+      },
+      nomeRules: [
+        v => !!v || 'Informe o nome do autor'
+      ],
     }
   },
 
   methods: {
     async cadastrar () {
-      let autor = {
-        nome: this.autor.nome,
-        email: this.autor.email,
+      try {
+        if (!this.valid) {
+          return this.$toast.warning('O formulário de cadastro não é válido!')
+        }
+        let autor = {
+          nome: this.autor.nome,
+          email: this.autor.email,
+        }
+        let response = await this.$axios.$post('http://localhost:3333/autores', autor)
+        this.$toast.success(`Autor ${autor.nome} cadastrado com sucesso`)
+        this.$router.push('/autores')
+        console.log(response);
+      } catch (error) {
+        this.$toast.error('Ocorreu um erro ao registrar o formulário');
       }
-      let response = await this.$axios.$post('http://localhost:3333/autores', autor)
-      console.log(response);
     }
   }
 }

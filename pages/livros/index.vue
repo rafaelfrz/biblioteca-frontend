@@ -28,8 +28,22 @@
         :items="livros"
         :items-per-page="10"
         class="elevation-1"
-        dense
       >
+        <template v-slot:item.actions="{ item }">
+          <v-icon
+            small
+            class="mr-2"
+            @click="editItem(item)"
+          >
+            mdi-pencil
+          </v-icon>
+          <v-icon
+            small
+            @click="deletItem(item)"
+          >
+            mdi-delete
+          </v-icon>
+        </template>
       </v-data-table>
     </v-container>
   </v-container>
@@ -45,7 +59,7 @@ export default {
         {
           text: 'Código',
           align: 'center',
-          sortable:false,
+          sortable: true,
           value: 'id',
         },
         {
@@ -61,14 +75,20 @@ export default {
           value: 'sinopse'
         },
         {
+          text: 'Categoria',
+          align: 'center',
+          sortable: true,
+          value: 'categoria.nome'
+        },
+        {
           text: 'Autor',
           align: 'center',
-          sortable: false,
-          value: 'autores.nome'
-        }
+          sortable: true,
+          value: 'autor.nome'
+        },
+        { text: "", value: "actions" }
       ],
       livros: [],
-      autores: []
     }
   },
 
