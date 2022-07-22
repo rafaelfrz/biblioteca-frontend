@@ -2,7 +2,7 @@
   <v-container>
     <h1>Cadastro de Livros</h1>
     <hr>
-    <v-form>
+    <v-form v-model="valid">
       <v-container>
         <v-row>
           <v-col>
@@ -19,6 +19,8 @@
             <v-text-field
             v-model="livro.titulo"
             placeholder="Título"
+            :rules="tituloRules"
+            required
             solo
             />
           </v-col>
@@ -36,6 +38,8 @@
             <v-text-field
             v-model="livro.idCategoria"
             placeholder="Categoria"
+            :rules="idCategoriaRules"
+            required
             solo
             >
             </v-text-field>
@@ -44,9 +48,9 @@
         <v-row>
           <v-col>
             <v-text-field
-            v-model="livro.idAutor"
-            placeholder="Autor"
-            solo
+              v-model="livro.idAutor"
+              placeholder="Autor"
+              solo
             >
             </v-text-field>
           </v-col>
@@ -61,7 +65,7 @@
     </v-btn>
     <v-btn
       solo
-      @click="cadastrar"¨
+      @click="persistir"
     >
       Cadastrar
     </v-btn>
@@ -74,6 +78,7 @@ export default {
 
   data () {
     return {
+      valid: false,
       livro: {
         id: null,
         titulo: null,
@@ -81,31 +86,62 @@ export default {
         emprestado: null,
         idCategoria: null,
         idAutor: null,
-      }
+      },
+      tituloRules: [
+        v => !!v || 'Informe o titulo do livro'
+      ],
+      idCategoriaRules: [
+        v => !!v || 'Informe a categoria do livro'
+      ]
+    }
+  },
+
+  created() {
+    if(this.$route?.params?.id) {
+      this.getById(this.$route.params.id)
     }
   },
 
   methods: {
-    async cadastrar () {
-      let livro = {
-        titulo: this.livro.titulo,
-        sinopse: this.livro.sinopse,
-        emprestado: this.livro.emprestado,
-        idCategoria: this.livro.idCategoria,
-        idAutor: this.livro.idAutor,
+    async persistir () {
+      try {
+        if (!this.valid) {
+          return this.$toast.warning('O formulário de cadastro não é válido!')
+        };
+
+        let livro = {
+          titulo: this.livro.titulo,
+          sinopse: this.livro.sinopse,
+          emprestado: this.livro.emprestado,
+          idCategoria: this.livro.idCategoria,
+          idAutor: this.livro.idAutor,
+        };
+
+        if(!this.livro.id) {
+          await this.$axios.$post('http://localhost:3333/livros', livro);
+          this.$toast.success(`Livro ${livro.titulo} cadastrado com sucesso`);
+          return this.$router.push('/livros');
+        };
+
+        await this.$axios.$post(`http://localhost:3333/livros/${this.livro.id}`, livro)
+
+        this.$toast.success('Cadastro atualizado com sucesso');
+        return this.$router.push('/livros');
+      } catch (error) {
+        this.$toast.error('Ocorreu um erro ao registrar o formulário');
       }
-      let response = await this.$axios.$post('http://localhost:3333/livros', livro);
-      console.log(response);
-    }
-  },
+    },
 
-  created () {
-    this.getLivros()
-  },
+    async getAutores () {
+      this.autores = await this.$axios.$get('http://localhost:3333/autores');
+    },
 
-  methods: {
-    async getLivros () {
-      this.livros = await this.$axios.$get('http://localhost:3332/livros');
+    async getCategorias () {
+      this.categorias = await this.$axios.$get('http://localhost:3333/categorias');
+    },
+
+    async getById(id) {
+      this.livro = await this.$axios.$get(`http://localhost:3333/livros/${id}`);
     }
   }
 }

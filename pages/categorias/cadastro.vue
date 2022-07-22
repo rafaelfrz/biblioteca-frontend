@@ -28,14 +28,14 @@
       </v-container>
     </v-form>
     <v-btn
-      outlined
+      solo
       to="/categorias"
     >
       Cancelar
     </v-btn>
     <v-btn
-      outlined
-      @click="cadastrar"
+      solo
+      @click="persistir"
       >
         Cadastrar
     </v-btn>
@@ -59,22 +59,40 @@ export default {
     }
   },
 
+  created() {
+    if (this.$route?.params?.id) {
+      this.getById(this.$route.params.id)
+    }
+  },
+
   methods: {
-    async cadastrar () {
+    async persistir () {
       try {
         if (!this.valid) {
           return this.$toast.warning('O formulário de cadastro não é válido')
-        }
+        };
+        
         let categoria = {
           nome: this.categoria.nome
+        };
+
+        if (!this.categoria.id) {
+          await this.$axios.$post('http://localhost:3333/categorias', categoria);
+          this.$toast.success(`Categoria ${categoria.nome} cadastrado com sucesso`);
+          return this.$router.push('/categorias');
         }
-        let response = await this.$axios.$post('http://localhost:3333/categorias', categoria);
-        this.$toast.success(`Categoria ${categoria.nome} cadastrado com sucesso`);
-        this.$router.push('/categorias');
-        console.log(response);
+
+        await this.$axios.$post(`http://localhost:3333/categorias/${this.categoria.id}`, categoria)
+        
+        this.$toast.success('Cadastro atualizado com sucesso');
+        return this.$router.push('/categorias');
       } catch(error) {
         this.$toast.error('Ocorreu um erro ao registrar o formulário');
       }
+    },
+
+    async getById(id) {
+      this.categoria = await this.$axios.$get(`http://localhost:3333/categorias/${id}`);
     }
   }
 }

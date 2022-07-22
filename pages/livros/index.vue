@@ -33,13 +33,13 @@
           <v-icon
             small
             class="mr-2"
-            @click="editItem(item)"
+            @click="editar(item)"
           >
             mdi-pencil
           </v-icon>
           <v-icon
             small
-            @click="deletItem(item)"
+            @click="deletar(item)"
           >
             mdi-delete
           </v-icon>
@@ -99,12 +99,28 @@ export default {
   methods: {
     async getLivros () {
       this.livros = await this.$axios.$get('http://localhost:3333/livros')
+    },
+
+    async deletar(livro) {
+      try {
+        if (confirm(`Deseja deletar o livro ID ${livro.id} - ${livro.nome}`)) {
+          let response = await this.$axios.$post('http://localhost:3333/livros/deletar', { id: livro.id });
+          this.$toast.success(response.message);
+          this.getLivros();
+        }
+      } catch(error) {
+        console.log(error.message);
+        this.$toast.error('Ocorreu um erro ao atender a requisição. Contate o administrador/suporte');
+      }
+    },
+
+    async editar(livro){
+      this.$router.push({
+        name: 'livros-cadastro',
+        params: { id: livro.id }
+      });
     }
-  },
-
+  }
 }
+
 </script>
-
-<style>
-
-</style>

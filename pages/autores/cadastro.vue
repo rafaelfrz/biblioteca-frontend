@@ -44,7 +44,7 @@
     </v-btn>
     <v-btn
       solo
-      @click="cadastrar"
+      @click="persistir"
     >
       Cadastrar
     </v-btn>
@@ -69,28 +69,42 @@ export default {
     }
   },
 
+  created() {
+    if (this.$route?.params?.id) {
+      this.getById(this.$route.params.id)
+    }
+  },
+
   methods: {
-    async cadastrar () {
+    async persistir () {
       try {
         if (!this.valid) {
           return this.$toast.warning('O formulário de cadastro não é válido!')
         }
+
         let autor = {
           nome: this.autor.nome,
           email: this.autor.email,
         }
-        let response = await this.$axios.$post('http://localhost:3333/autores', autor)
-        this.$toast.success(`Autor ${autor.nome} cadastrado com sucesso`)
-        this.$router.push('/autores')
-        console.log(response);
+
+        if(!this.autor.id) {
+          await this.$axios.$post('http://localhost:3333/autores', autor)
+          this.$toast.success(`Autor ${autor.nome} cadastrado com sucesso`)
+          return this.$router.push('/autores')
+        }
+
+        await this.$axios.$post(`http://localhost:3333/${this.autor.id}`, autor)
+  
+        this.$toast.success(`Cadastro atualizado com sucesso`)
+        return this.$router.push('/autores')
       } catch (error) {
         this.$toast.error('Ocorreu um erro ao registrar o formulário');
       }
+    },
+
+    async getById(id) {
+      this.autor = await this.$axios.$get(`http://localhost:3333/autores/${id}`)
     }
   }
 }
 </script>
-
-<style>
-
-</style>

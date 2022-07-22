@@ -33,13 +33,13 @@
           <v-icon
             small
             class="mr-2"
-            @click="editItem(item)"
+            @click="editar(item)"
           >
             mdi-pencil
           </v-icon>
           <v-icon
             small
-            @click="deletItem(item)"
+            @click="deletar(item)"
           >
             mdi-delete
           </v-icon>
@@ -89,10 +89,30 @@ export default {
   created() {
     this.getUsuarios()
   },
-
+  
   methods: {
     async getUsuarios () {
-      this.usuarios = await this.$axios.$get('http://localhost:3333/usuarios')
+      this.usuarios = await this.$axios.$get('http://localhost:3333/usuarios');
+    },
+
+    async deletar(usuario) {
+      try {
+        if(confirm(`Deseja deletar a usuario id ${usuario.id} - ${usuario.nome}?`)) {
+          let response = await this.$axios.$post('http://localhost:3333/usuarios/deletar', { id: usuario.id });
+          this.$toast.success(response.message);
+          this.getUsuarios();
+        } 
+      } catch(error) {
+        console.log(error.message);
+        this.$toast.error('Ocorreu um erro ao atender a requisição. Contate o administrador/suporte');
+      }
+    },
+
+    async editar(usuario) {
+      this.$router.push({
+        name: 'usuarios-cadastro',
+        params: { id: usuario.id }
+      });
     }
   }
 }

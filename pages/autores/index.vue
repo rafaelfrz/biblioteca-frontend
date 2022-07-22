@@ -22,10 +22,10 @@
         </v-col>
       </v-row>
     </v-container>
-    <v-container>
+  <v-container>
       <v-data-table
         :headers="headers"
-        :items="livros"
+        :items="autores"
         :items-per-page="10"
         class="elevation-1"
       >
@@ -33,7 +33,7 @@
           <v-icon
             small
             class="mr-2"
-            @click="editItem(item)"
+            @click="editar(item)"
           >
             mdi-pencil
           </v-icon>
@@ -76,7 +76,7 @@ export default {
         },
         { text: "", value: "actions" }
       ],
-      livros: []
+      autores: []
     }
   },
 
@@ -86,8 +86,7 @@ export default {
 
   methods: {
     async getAutores () {
-      this.livros = await this.$axios.$get('http://localhost:3333/autores')
-      this.$toast('Autores retornados com sucesso');
+      this.autores = await this.$axios.$get('http://localhost:3333/autores')
     },
     
     async deletar(autor) {
@@ -101,11 +100,14 @@ export default {
         console.log(error.message);
         this.$toast.error('Ocorreu um erro ao atender a requisição. Contate o administrador/suporte');
       }
+    },
+
+    async editar(autor){
+      this.$router.push({
+        name: 'autores-cadastro',
+        params: { id: autor.id }
+      });
     }
   }
 }
 </script>
-
-<style>
-
-</style>

@@ -1,12 +1,10 @@
 <template>
   <v-container>
-    <h1>Consulta de categorias</h1>
+    <h1>Categorias</h1>
     <hr>
     <v-container>
       <v-row>
-        <v-col
-        cols="2"
-        >
+        <v-col>
           <v-btn
           solo
           @click="getCategorias"
@@ -37,7 +35,7 @@
           <v-icon
             small
             class="mr-2"
-            @click="editItem(item)"
+            @click="editar(item)"
           >
             mdi-pencil
           </v-icon>
@@ -85,7 +83,6 @@ export default {
   methods: {
     async getCategorias () {
       this.categorias = await this.$axios.$get('http://localhost:3333/categorias');
-      this.$toast('Categorias retornados com sucesso!');
     },
 
     async deletar(categoria) {
@@ -99,6 +96,13 @@ export default {
         console.log(error.message);
         this.$toast.error('Ocorreu um erro ao atender a requisição. Contate o administrador/suporte');
       }
+    },
+    
+    async editar(categoria){
+      this.$router.push({
+        name: 'categorias-cadastro',
+        params: { id: categoria.id }
+      });
     }
   }
 }
