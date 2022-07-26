@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container style="background-color: red;">
     <h1> Livros </h1>
     <hr>
     <v-container>
@@ -7,7 +7,7 @@
         <v-col>
           <v-btn
             solo
-            @click="getLivros"
+            to="/livros/consulta"
           >
             Pesquisar
           </v-btn>
@@ -22,7 +22,7 @@
         </v-col>
       </v-row>
     </v-container>
-    <v-container>
+    <v-container style="background-color: blue;">
       <v-data-table
         :headers="headers"
         :items="livros"

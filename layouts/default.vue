@@ -103,6 +103,11 @@ export default {
           icon: 'mdi-account-box',
           title: 'Usuários',
           to: '/usuarios'
+        },
+        {
+          icon: 'mdi-calculator',
+          title: 'Calculadora',
+          to: 'carcule'
         }
       ],
       miniVariant: false,

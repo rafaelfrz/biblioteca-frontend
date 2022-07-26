@@ -1,49 +1,49 @@
 <template>
-  <v-container>
+  <v-container style="background-color: red;">
     <h1>Cadastro de Livros</h1>
     <hr>
     <v-form v-model="valid">
-      <v-container>
+      <v-container style="background-color: blue;">
         <v-row>
-          <v-col>
+          <v-col cols="1">
             <v-text-field
-            v-model="livro.id"
-            placeholder="Código"
-            disabled
-            solo
+              v-model="livro.id"
+              placeholder="Código"
+              disabled
+              solo
             />
           </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <v-text-field
-            v-model="livro.titulo"
-            placeholder="Título"
-            :rules="tituloRules"
-            required
-            solo
+            <v-col cols="8">
+              <v-text-field
+              v-model="livro.titulo"
+              placeholder="Título"
+              :rules="tituloRules"
+              required
+              solo
             />
           </v-col>
-        </v-row>
-        <v-row>
-          <v-text-field
-          v-model="livro.sinopse"
-          placeholder="Sinopse"
-          solo
-          >
-          </v-text-field>
-        </v-row>
-        <v-row>
-          <v-col>
+          <v-col cols="3">
             <v-text-field
-            v-model="livro.idCategoria"
-            placeholder="Categoria"
-            :rules="idCategoriaRules"
-            required
-            solo
+              v-model="livro.idCategoria"
+              placeholder="Categoria"
+              :rules="idCategoriaRules"
+              required
+              solo
             >
             </v-text-field>
           </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <v-text-field
+              v-model="livro.sinopse"
+              placeholder="Sinopse"
+              solo
+            >
+            </v-text-field>
+          </v-col>
+        </v-row>
+        <v-row>
         </v-row>
         <v-row>
           <v-col>
