@@ -90,6 +90,11 @@ export default {
           to: '/livros'
         },
         {
+          icon: 'mdi-book',
+          title: 'Emprestimos',
+          to: '/emprestimos'
+        },
+        {
           icon: 'mdi-folder',
           title: 'Categorias',
           to: '/categorias'
